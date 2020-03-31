@@ -55,9 +55,11 @@ class MPT():
             self.detector = YOLOv3(
                 device=self.device, img_size=yolo_img_size, person_detector=True, video=True, return_dict=True
             )
-            x = torch.Tensor([np.random.rand(3, 300, 400), np.random.rand(3, 300, 400)])
-            print(self.detector(x))
-            print(self.detector(x).shape)
+            # output [{'boxes': tensor([], size=(0, 4)), 
+            #           'scores': tensor([]), 
+            #           'classes': tensor([])}]
+            # x = torch.Tensor([np.random.rand(3, 300, 400), np.random.rand(3, 300, 400)])
+            # print(self.detector(x))
         else:
             raise ModuleNotFoundError
 
