@@ -55,7 +55,7 @@ class MPT():
             self.detector = YOLOv3(
                 device=self.device, img_size=yolo_img_size, person_detector=True, video=True, return_dict=True
             )
-            x = np.array([torch.rand(3, 300, 400), torch.rand(3, 500, 400)])
+            x = torch.Tensor([np.random.rand(3, 300, 400), np.random.rand(3, 300, 400)])
             print(self.detector(x))
             print(self.detector(x).shape)
         else:
