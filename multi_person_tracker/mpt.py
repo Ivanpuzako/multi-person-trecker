@@ -48,13 +48,13 @@ class MPT():
 
         if detector_type == 'maskrcnn':
             self.detector = keypointrcnn_resnet50_fpn(pretrained=True).to(self.device).eval()
-            # self.detector = load_state_dict_from_url(URL_TO_PATH.pth,
-            #                                       progress=progress)
-            # model.load_state_dict(state_dict, strict=False)
         elif detector_type == 'yolo':
             self.detector = YOLOv3(
                 device=self.device, img_size=yolo_img_size, person_detector=True, video=True, return_dict=True
             )
+            x = [torch.rand(3, 300, 400), torch.rand(3, 500, 400)]
+            print(self.detector(x))
+            print(self.detector(x).shape)
         else:
             raise ModuleNotFoundError
 
