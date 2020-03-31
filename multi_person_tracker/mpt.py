@@ -13,6 +13,9 @@ from yolov3.yolo import YOLOv3
 from multi_person_tracker import Sort
 from multi_person_tracker.data import ImageFolder, images_to_video
 
+from google.colab.patches import cv2_imshow
+
+
 class MPT():
     def __init__(
             self,
@@ -165,7 +168,8 @@ class MPT():
                 cv2.putText(img, f'{d[4]}', (d[0] - 9, d[1] - 9), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
                 cv2.putText(img, f'{d[4]}', (d[0] - 8, d[1] - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255))
 
-            cv2.imshow('result video', img)
+            # cv2.imshow('result video', img)
+            cv2_imshow('result video', img)
 
             # time.sleep(0.03)
             if cv2.waitKey(1) & 0xFF == ord('q'):
