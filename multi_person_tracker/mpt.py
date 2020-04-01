@@ -62,13 +62,9 @@ class MPT():
         self.display = display
         self.detection_threshold = detection_threshold
         self.output_format = output_format
-        self.detector_type
+        self.detector_type = detector_type
         self.detector_checkpoint=detector_checkpoint,
         self.detector_config=detector_config
-
-        if self.detector_checkpoint is not None and self.detector_config is not None:
-            assert isinstance(self.detector_checkpoint, str)
-            assert isinstance(self.detector_config, str)
 
         if self.detector_type == 'maskrcnn':
             self.detector = keypointrcnn_resnet50_fpn(pretrained=True).to(self.device).eval()
