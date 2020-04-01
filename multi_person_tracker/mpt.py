@@ -15,6 +15,18 @@ from multi_person_tracker.data import ImageFolder, images_to_video
 
 from google.colab.patches import cv2_imshow
 
+from mmdet.apis import init_detector, inference_detector
+import matplotlib.pyplot as plt
+import mmcv
+import numpy as np
+import pycocotools.mask as maskUtils
+import torch
+from mmcv.parallel import collate, scatter
+
+from mmdet.core import get_classes
+from mmdet.datasets.pipelines import Compose
+from mmdet.models import build_detector
+
 
 class MPT():
     def __init__(
@@ -26,6 +38,8 @@ class MPT():
             detector_type='yolo',
             yolo_img_size=608,
             output_format='list',
+            detector_checkpoint=None,
+            detector_config=None
     ):
         '''
         Multi Person Tracker
@@ -48,10 +62,17 @@ class MPT():
         self.display = display
         self.detection_threshold = detection_threshold
         self.output_format = output_format
+        self.detector_type
+        self.detector_checkpoint=detector_checkpoint,
+        self.detector_config=detector_config
 
-        if detector_type == 'maskrcnn':
+        if self.detector_checkpoint is not None and self.detector_config is not None:
+            assert isinstance(self.detector_checkpoint, str)
+            assert isinstance(self.detector_config, str)
+
+        if self.detector_type == 'maskrcnn':
             self.detector = keypointrcnn_resnet50_fpn(pretrained=True).to(self.device).eval()
-        elif detector_type == 'yolo':
+        elif self.detector_type == 'yolo':
             self.detector = YOLOv3(
                 device=self.device, img_size=yolo_img_size, person_detector=True, video=True, return_dict=True
             )
@@ -60,6 +81,10 @@ class MPT():
             #           'classes': tensor([])}]
             # x = torch.Tensor([np.random.rand(3, 300, 400), np.random.rand(3, 300, 400)])
             # print(self.detector(x))
+        elif self.detector_type == 'retina':
+            self.detector = init_detector(
+                self.detector_config, self.detector_checkpoint, device='cuda:0'
+            )
         else:
             raise ModuleNotFoundError
 
@@ -83,7 +108,11 @@ class MPT():
         for batch in tqdm(dataloader):
             batch = batch.to(self.device)
 
-            predictions = self.detector(batch)
+            # TODO: add handler for own detector input batch format
+            if self.detector_type == 'retina':
+                predictions = batch_inferense(self.detector, batch)
+            else:
+                predictions = self.detector(batch)
 
             for pred in predictions:
                 bb = pred['boxes'].cpu().numpy()
@@ -211,3 +240,61 @@ class MPT():
 
         return result
 
+
+def prepare_image(model, img):
+    class LoadImagee(object):
+
+        def __call__(self, results):
+            if isinstance(results['img'], str):
+                results['filename'] = ''#results['img']
+            else:
+                results['filename'] = ''
+            # img = mmcv.imread(results['img'])
+            # img = np.random.randint(0, 255, (720, 1280, 3))
+            img = results['img']
+            results['img_shape'] = img.shape
+            results['ori_shape'] = img.shape
+            return results
+
+
+    # img = '/content/gdrive/My Drive/catapulta/Overhead_train_images/frame10000.jpg'
+    cfg = model.cfg
+    device = next(model.parameters()).device  # model device
+    # build the data pipeline
+    test_pipeline = [LoadImagee()] + cfg.data.test.pipeline[1:]
+    test_pipeline = Compose(test_pipeline)
+    # prepare data
+    data = dict(img=img)
+    data = test_pipeline(data)
+    data = scatter(collate([data], samples_per_gpu=1), [device])[0]
+    # forward the model
+    return data
+
+def predict(model, data):
+    with torch.no_grad():
+        result = model(return_loss=False, rescale=True, **data)
+    return result
+
+def match_output(mmdet_out):
+    out = {
+        'boxes': [], 
+        'scores': [], 
+        'classes': []
+        }
+    for box in mmdet_out[0]:
+        if box[4] > 0.3:
+            out['boxes'].append([box[0], box[1], box[2], box[3]])
+            out['scores'].append(box[4])
+            out['classes'].append(0)
+    for k in out.keys():
+        out[k] = torch.Tensor(out[k])
+    return out
+
+def batch_inferense(model, batch):
+    result = []
+    for b in batch:
+        img = np.random.randint(0, 255, (720, 1280, 3))
+        data = prepare_image(model, img)
+        result = predict(model, data)
+        result.append(match_output(result))
+    return result
