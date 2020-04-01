@@ -15,7 +15,7 @@ from multi_person_tracker.data import ImageFolder, images_to_video
 
 from google.colab.patches import cv2_imshow
 
-from mmdet.apis import init_detector, inference_detector
+from mmdetection.mmdet.apis import init_detector, inference_detector
 import matplotlib.pyplot as plt
 import mmcv
 import numpy as np
@@ -23,9 +23,9 @@ import pycocotools.mask as maskUtils
 import torch
 from mmcv.parallel import collate, scatter
 
-from mmdet.core import get_classes
-from mmdet.datasets.pipelines import Compose
-from mmdet.models import build_detector
+from mmdetection.mmdet.core import get_classes
+from mmdetection.mmdet.datasets.pipelines import Compose
+from mmdetection.mmdet.models import build_detector
 
 
 class MPT():
