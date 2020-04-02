@@ -72,7 +72,7 @@ class MPT():
         self.detector_type = detector_type
         self.detector_checkpoint = detector_checkpoint[0] if type(detector_checkpoint) == tuple else detector_checkpoint,
         self.detector_config = detector_config[0] if type(detector_config) == tuple else detector_config
-        print(self.detector_checkpoin)
+        print(self.detector_checkpoint)
         print(self.detector_config)
 
         if self.detector_type == 'maskrcnn':
