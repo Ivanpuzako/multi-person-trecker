@@ -295,8 +295,8 @@ def match_output(mmdet_out):
             out['boxes'].append([box[0], box[1], box[2], box[3]])
             out['scores'].append(box[4])
             out['classes'].append(0)
-    for k in out.keys():
-        out[k] = torch.Tensor(out[k])
+    # for k in out.keys():
+    #     out[k] = torch.Tensor(out[k])
     return out
 
 def batch_inferense(model, batch):
