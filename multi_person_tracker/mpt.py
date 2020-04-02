@@ -72,8 +72,7 @@ class MPT():
         self.detector_type = detector_type
         self.detector_checkpoint = detector_checkpoint[0] if type(detector_checkpoint) == tuple else detector_checkpoint,
         self.detector_config = detector_config[0] if type(detector_config) == tuple else detector_config
-        print('mpt detector_checpoint[0]', self.detector_checkpoint[0])
-        print(self.detector_config)
+    
 
         if self.detector_type == 'maskrcnn':
             self.detector = keypointrcnn_resnet50_fpn(pretrained=True).to(self.device).eval()
@@ -118,8 +117,12 @@ class MPT():
                 predictions = batch_inferense(self.detector, batch)
             else:
                 predictions = self.detector(batch)
+            print('type(predictions)', type(predictions))
 
+            
             for pred in predictions:
+                print('type(pred)', type(pred))
+                print('pred[0]', pred[0])
                 bb = pred['boxes'].cpu().numpy()
                 sc = pred['scores'].cpu().numpy()[..., None]
                 dets = np.hstack([bb,sc])
