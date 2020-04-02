@@ -70,8 +70,8 @@ class MPT():
         self.detection_threshold = detection_threshold
         self.output_format = output_format
         self.detector_type = detector_type
-        self.detector_checkpoint=detector_checkpoint,
-        self.detector_config=detector_config
+        self.detector_checkpoint=detector_checkpoint[0],
+        self.detector_config=detector_config[0]
 
         if self.detector_type == 'maskrcnn':
             self.detector = keypointrcnn_resnet50_fpn(pretrained=True).to(self.device).eval()
@@ -85,8 +85,6 @@ class MPT():
             # x = torch.Tensor([np.random.rand(3, 300, 400), np.random.rand(3, 300, 400)])
             # print(self.detector(x))
         elif self.detector_type == 'retina':
-            print(self.detector_config)
-            print(self.detector_checkpoint)
             self.detector = init_detector(
                 self.detector_config, self.detector_checkpoint, device='cuda:0'
             )
