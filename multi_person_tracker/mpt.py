@@ -123,7 +123,7 @@ class MPT():
             for pred in predictions:
                 print('type(pred)', type(pred))
                 # print('pred[0]', pred[0])
-                print('pred', pred)
+                # print('pred', pred)
                 # print('predkeys', pred.keys())
                 bb = pred['boxes'].cpu().numpy()
                 sc = pred['scores'].cpu().numpy()[..., None]
@@ -291,6 +291,7 @@ def match_output(mmdet_out):
         'scores': [], 
         'classes': []
         }
+    print('mmdet_out[0]', mmdet_out[0])
     for box in mmdet_out[0]:
         if box[4] > 0.3:
             out['boxes'].append([box[0], box[1], box[2], box[3]])
