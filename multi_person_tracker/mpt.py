@@ -78,6 +78,8 @@ class MPT():
             # x = torch.Tensor([np.random.rand(3, 300, 400), np.random.rand(3, 300, 400)])
             # print(self.detector(x))
         elif self.detector_type == 'retina':
+            print(self.detector_config)
+            print(self.detector_checkpoint)
             self.detector = init_detector(
                 self.detector_config, self.detector_checkpoint, device='cuda:0'
             )
