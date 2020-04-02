@@ -122,7 +122,8 @@ class MPT():
             
             for pred in predictions:
                 print('type(pred)', type(pred))
-                print('pred[0]', pred[0])
+                # print('pred[0]', pred[0])
+                print('predkeys', pred.keys())
                 bb = pred['boxes'].cpu().numpy()
                 sc = pred['scores'].cpu().numpy()[..., None]
                 dets = np.hstack([bb,sc])
