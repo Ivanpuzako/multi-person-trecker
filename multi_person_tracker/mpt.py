@@ -7,6 +7,13 @@ import numpy as np
 import os.path as osp
 from tqdm import tqdm
 from torch.utils.data import DataLoader
+
+import imp
+
+torchvision = imp.load_source('torchvision', '/usr/local/lib/python3.6/dist-packages/torchvision/__init__.py')
+mmdet = imp.load_source('mmdet', '/content/gdrive/My Drive/vibe_repos/mmdetection/mmdet/__init__.py')
+
+
 from torchvision.models.detection import keypointrcnn_resnet50_fpn
 from yolov3.yolo import YOLOv3
 
