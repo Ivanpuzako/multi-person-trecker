@@ -72,7 +72,7 @@ class MPT():
         self.detector_type = detector_type
         self.detector_checkpoint = detector_checkpoint[0] if type(detector_checkpoint) == tuple else detector_checkpoint,
         self.detector_config = detector_config[0] if type(detector_config) == tuple else detector_config
-        print(self.detector_checkpoint)
+        print('mpt detector_checpoint[0]', self.detector_checkpoint[0])
         print(self.detector_config)
 
         if self.detector_type == 'maskrcnn':
@@ -88,7 +88,7 @@ class MPT():
             # print(self.detector(x))
         elif self.detector_type == 'retina':
             self.detector = init_detector(
-                self.detector_config, self.detector_checkpoint, device='cuda:0'
+                self.detector_config, self.detector_checkpoint[0], device='cuda:0'
             )
         else:
             raise ModuleNotFoundError
