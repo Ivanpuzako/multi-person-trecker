@@ -117,8 +117,6 @@ class MPT():
                 predictions = batch_inferense(self.detector, batch)
             else:
                 predictions = self.detector(batch)
-            print('type(predictions)', type(predictions))
-
             
             for pred in predictions:
                 print('type(pred)', type(pred))
@@ -299,6 +297,7 @@ def match_output(mmdet_out):
             out['classes'].append(0)
     # for k in out.keys():
     #     out[k] = torch.Tensor(out[k])
+    print('out', out)
     return out
 
 def batch_inferense(model, batch):
