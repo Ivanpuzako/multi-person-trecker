@@ -299,8 +299,7 @@ def match_output(mmdet_out):
 def batch_inferense(model, batch):
     result = []
     for b in batch:
-        img = np.random.randint(0, 255, (720, 1280, 3))
-        data = prepare_image(model, img)
+        data = prepare_image(model, b)
         result = predict(model, data)
         result.append(match_output(result))
     print(result)
