@@ -256,8 +256,8 @@ def prepare_image(model, img):
                 results['filename'] = ''
             # img = mmcv.imread(results['img'])
             # img = np.random.randint(0, 255, (720, 1280, 3))
-            results['img'] = np.float32(results['img'])
-            img = results['img']
+            results['img'] = results['img'].double()
+            img = results['img'].numpy()
             results['img_shape'] = img.shape
             results['ori_shape'] = img.shape
             return results
