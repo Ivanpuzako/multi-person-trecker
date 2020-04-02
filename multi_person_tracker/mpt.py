@@ -7,7 +7,7 @@ import numpy as np
 import os.path as osp
 from tqdm import tqdm
 from torch.utils.data import DataLoader
-
+print(__file__)
 import imp
 
 torchvision = imp.load_source('torchvision', '/usr/local/lib/python3.6/dist-packages/torchvision/__init__.py')
@@ -123,7 +123,8 @@ class MPT():
             for pred in predictions:
                 print('type(pred)', type(pred))
                 # print('pred[0]', pred[0])
-                print('predkeys', pred.keys())
+                print('pred', pred)
+                # print('predkeys', pred.keys())
                 bb = pred['boxes'].cpu().numpy()
                 sc = pred['scores'].cpu().numpy()[..., None]
                 dets = np.hstack([bb,sc])
