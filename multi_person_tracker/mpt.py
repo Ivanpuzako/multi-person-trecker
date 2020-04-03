@@ -231,7 +231,7 @@ class MPT():
         '''
 
         image_dataset = ImageFolder(image_folder)
-
+        print('IMAGE_FOLDER_____________', image_folder)
         dataloader = DataLoader(image_dataset, batch_size=self.batch_size, num_workers=8)
 
         trackers = self.run_tracker(dataloader)
@@ -247,21 +247,33 @@ class MPT():
 
 
 def prepare_image(model, img):
-    class LoadImagee(object):
+    # class LoadImagee(object):
+
+    #     def __call__(self, results):
+    #         if isinstance(results['img'], str):
+    #             results['filename'] = ''#results['img']
+    #         else:
+    #             results['filename'] = ''
+    #         # img = mmcv.imread(results['img'])
+    #         # img = np.random.randint(0, 255, (720, 1280, 3))
+    #         results['img'] = np.float32(results['img'].cpu().numpy())
+    #         img = results['img']
+    #         results['img_shape'] = img.shape
+    #         results['ori_shape'] = img.shape
+    #         return results
+
+    class LoadImage(object):
 
         def __call__(self, results):
             if isinstance(results['img'], str):
-                results['filename'] = ''#results['img']
+                results['filename'] = results['img']
             else:
-                results['filename'] = ''
-            # img = mmcv.imread(results['img'])
-            # img = np.random.randint(0, 255, (720, 1280, 3))
-            results['img'] = np.float32(results['img'].cpu().numpy())
-            img = results['img']
+                results['filename'] = None
+            img = mmcv.imread(results['img'])
+            results['img'] = img
             results['img_shape'] = img.shape
             results['ori_shape'] = img.shape
             return results
-
 
     # img = '/content/gdrive/My Drive/catapulta/Overhead_train_images/frame10000.jpg'
     cfg = model.cfg
